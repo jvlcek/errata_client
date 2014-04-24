@@ -1,5 +1,11 @@
 # ErrataClient
 
+[![Gem Version](https://badge.fury.io/rb/errata_client.png)](http://badge.fury.io/rb/errata_client)
+[![Build Status](https://travis-ci.org/ManageIQ/errata_client.png)](https://travis-ci.org/ManageIQ/errata_client)
+[![Code Climate](https://codeclimate.com/github/ManageIQ/errata_client.png)](https://codeclimate.com/github/ManageIQ/errata_client)
+[![Coverage Status](https://coveralls.io/repos/ManageIQ/errata_client/badge.png?branch=master)](https://coveralls.io/r/ManageIQ/errata_client)
+[![Dependency Status](https://gemnasium.com/ManageIQ/errata_client.png)](https://gemnasium.com/ManageIQ/errata_client)
+
 ErrataClient is a client interface to the RedHat Errata Tool
 
 ## Installation
