@@ -12,8 +12,7 @@ module ErrataClient
     end
 
     def self.parse_raw_data(raw_data)
-      return [] if raw_data.nil?
-      JSON.parse(raw_data).collect { |tps_job| TpsJob.new(tps_job) }
+      parse_typed_raw_data(raw_data, TpsJob)
     end
   end
 end

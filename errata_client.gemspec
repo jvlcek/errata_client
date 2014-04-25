@@ -15,7 +15,7 @@ Gem::Specification.new do |spec|
   spec.email         = authors_hash.values
   spec.description   = %q{ErrataClient is a client library interface to the RedHat Errata Tool}
   spec.summary       = %q{ErrataClient is a client library interface to the RedHat Errata Tool}
-  spec.homepage      = ""
+  spec.homepage      = "http://github.com/ManageIQ/errata_client"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -- lib/*`.split("\n")

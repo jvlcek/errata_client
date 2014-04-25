@@ -8,6 +8,8 @@ module ErrataClient
       :format => "json"
     }
 
+    attr_reader :attribute_names
+
     def initialize(url)
       self.class.config(url)
     end
@@ -54,8 +56,9 @@ module ErrataClient
       end
     end
 
-    def attribute_names
-      @attribute_names
+    def self.parse_typed_raw_data(raw_data, klass)
+      return [] if raw_data.nil?
+      JSON.parse(raw_data).collect { |item| klass.new(item) }
     end
   end
 end

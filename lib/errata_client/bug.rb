@@ -12,8 +12,7 @@ module ErrataClient
     end
 
     def self.parse_raw_data(raw_data)
-      return [] if raw_data.nil?
-      JSON.parse(raw_data).collect { |bug| Bug.new(bug) }
+      parse_typed_raw_data(raw_data, Bug)
     end
   end
 end

@@ -39,24 +39,24 @@ module ErrataClient
       raw_data.nil? ? [] : JSON.parse(raw_data).collect { |advisory| Advisory.new(advisory) }
     end
 
+    def query_related_objects(klass)
+      klass.parse_raw_data(self.class.execute(:get, "#{CONFIG[:suffix]}/#{id}/#{klass::CONFIG[:suffix]}"))
+    end
+
     def bugs
-      suffix = "#{CONFIG[:suffix]}/#{id}/#{Bug::CONFIG[:suffix]}"
-      Bug.parse_raw_data(self.class.execute(:get, suffix))
+      query_related_objects(Bug)
     end
 
     def builds
-      suffix = "#{CONFIG[:suffix]}/#{id}/#{Build::CONFIG[:suffix]}"
-      Build.parse_raw_data(self.class.execute(:get, suffix))
+      query_related_objects(Build)
     end
 
     def rpmdiff_runs
-      suffix = "#{CONFIG[:suffix]}/#{id}/#{RpmdiffRun::CONFIG[:suffix]}"
-      RpmdiffRun.parse_raw_data(self.class.execute(:get, suffix))
+      query_related_objects(RpmdiffRun)
     end
 
     def tps_jobs
-      suffix = "#{CONFIG[:suffix]}/#{id}/#{TpsJob::CONFIG[:suffix]}"
-      TpsJob.parse_raw_data(self.class.execute(:get, suffix))
+      query_related_objects(TpsJob)
     end
   end
 end
