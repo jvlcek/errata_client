@@ -1,5 +1,3 @@
-require 'json'
-
 module ErrataClient
   class TpsJob < Advisory
     CONFIG = {

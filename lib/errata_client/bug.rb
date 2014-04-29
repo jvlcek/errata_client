@@ -1,5 +1,3 @@
-require 'json'
-
 module ErrataClient
   class Bug < Advisory
     CONFIG = {

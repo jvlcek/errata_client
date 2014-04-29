@@ -1,3 +1,8 @@
+require 'json'
+require 'curb'
+require 'rack'
+require 'active_support/all'
+
 require 'errata_client/version'
 require 'errata_client/base'
 require 'errata_client/advisory'

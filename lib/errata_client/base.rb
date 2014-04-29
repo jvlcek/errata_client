@@ -1,11 +1,7 @@
-require 'json'
-require 'curb'
-require 'rack'
-
 module ErrataClient
   class Base
     CONFIG = {
-      :format => "json"
+      :format => "json",
     }
 
     attr_reader :attribute_names
@@ -14,7 +10,7 @@ module ErrataClient
       self.class.config(url)
     end
 
-    def self.config(url)
+    def self.config(url = nil)
       @url = url || @url
     end
 
@@ -29,17 +25,44 @@ module ErrataClient
       end
     end
 
-    def self.execute(method, suffix = nil)
-      use_url = suffix.nil? ? @url.dup : "#{@url}/#{suffix}"
-      use_url = "#{use_url}?format=#{CONFIG[:format]}"
-      client.url = use_url
-      client.perform
+    def self.json_parse(json_response, response = {})
+      return response if json_response.blank?
+      JSON.parse(json_response)
+    rescue
+      response
+    end
+
+    def self.fetch_error_message(json_response)
+      response = json_parse(json_response)
+      emsg = response["error"] || response["errors"] || ""
+      emsg.kind_of?(Hash) ? emsg.values.flatten.join(", ") : emsg
+    rescue
+      ""
+    end
+
+    def self.execute(method, suffix = nil, params = nil)
+      client_url(suffix)
+      send("client_#{method}", params)
       return nil if client.response_code == 404
       if client.response_code >= 400
-        msg = Rack::Utils::HTTP_STATUS_CODES[client.response_code]
-        raise "#{client.response_code} - #{msg}"
+        etype = "#{client.response_code}: #{Rack::Utils::HTTP_STATUS_CODES[client.response_code]}:"
+        raise "#{etype} #{fetch_error_message(client.body_str)}"
       end
       client.body_str
+    end
+
+    def self.client_url(suffix)
+      use_url    = suffix.blank? ? @url.dup : "#{@url}/#{suffix}"
+      client.url = "#{use_url}?format=#{CONFIG[:format]}"
+    end
+
+    def self.client_get(_params)
+      client.perform
+    end
+
+    def self.client_post(params)
+      raise "Must specify parameters for posts" if params.blank?
+      client.http_post(client.url, params.to_query)
     end
 
     def define_instance(hash)
@@ -57,8 +80,7 @@ module ErrataClient
     end
 
     def self.parse_typed_raw_data(raw_data, klass)
-      return [] if raw_data.nil?
-      JSON.parse(raw_data).collect { |item| klass.new(item) }
+      json_parse(raw_data, []).collect { |item| klass.new(item) }
     end
   end
 end
