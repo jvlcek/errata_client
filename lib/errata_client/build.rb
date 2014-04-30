@@ -1,5 +1,3 @@
-require 'json'
-
 module ErrataClient
   class Build < Advisory
     CONFIG = {
@@ -12,9 +10,8 @@ module ErrataClient
     end
 
     def self.parse_raw_data(raw_data)
-      return [] if raw_data.nil?
       result = []
-      JSON.parse(raw_data).each do |product_version, builds|
+      json_parse(raw_data, []).each do |product_version, builds|
         builds.each do |nvr_hashes|
           nvr_hashes.each do |nvr, nvr_hash|
             result << Build.new(
@@ -33,11 +30,11 @@ module ErrataClient
     end
 
     def architectures
-      @nvr_data.collect { |classification, data| data.keys }.flatten.sort.uniq
+      @nvr_data.collect { |_classification, data| data.keys }.flatten.sort.uniq
     end
 
     def rpms
-      @nvr_data.collect { |classification, data| data.values }.flatten.sort.uniq
+      @nvr_data.collect { |_classification, data| data.values }.flatten.sort.uniq
     end
   end
 end

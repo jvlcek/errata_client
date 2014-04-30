@@ -95,8 +95,27 @@ First configure Kerberos authentication to the Errata tool server and get a Kerb
 
   # Getting advisories a Bug belongs to
   bug_id = 100234
-  advs = ErrataClient::Advisory.advisories(:id => bug_id)
+  advs   = ErrataClient::Advisory.advisories(:id => bug_id)
   puts "Advisories Bug #{bug_id} belongs to: #{advs.collect(&:id)}"
+
+  # Advisory Updates - Updating the Status
+  adv = ErrataClient::Advisory.find(:id => 16371)
+  adv.status = "QE"
+
+  # Or the following with an optional comment
+  adv.change_status(:new_state => "QE", :comment => "Reason for Change")
+
+  # Adding a Bug to the Advisory
+  adv.add_bug(199999)
+
+  # Removing a Bug from the Advisory
+  adv.remove_bug(199999)
+
+  # Adding a Build to the Advisory
+  adv.add_build(:nvr => "cfme-5.2.3.2-1.el6cf", :product_version => "RHEL-6.CFME-5")
+
+  # Removing a Build from an Advisory
+  adv.remove_build(:nvr => "cfme-5.2.3.2-1.el6cf")
 ```
 
 ## Contributing
