@@ -48,7 +48,7 @@ module ErrataClient
     end
 
     def status=(new_state)
-      change_status(:new_state => new_state)
+      change_status(:new_state => new_state) unless @status == new_state
     end
 
     # change_status parameters:
@@ -58,7 +58,7 @@ module ErrataClient
     def change_status(params)
       raise "Must specify a new_state parameter to update this advisory" if params[:new_state].blank?
       self.class.execute(:post, "#{post_suffix}/change_state", params)
-      @status = new_state
+      @status = params[:new_state]
     end
 
     # Advisory Bugzilla Issue Update Methods
